@@ -1,25 +1,71 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  NavLink,
+  Redirect,
+  Link,
+} from "react-router-dom";
+import Recipes from "./components/Recipes";
+import ShoppingList from "./components/ShoppingList";
+
+interface Ingredients {
+  id: string;
+  ingredientName: string;
+  quantity: string;
+}
+
+interface RecipesForm {
+  id: string;
+  name: string;
+  imageUrl: string;
+  description: string;
+  ingredients: Array<Ingredients>;
+}
 
 function App() {
+  const [ingredeinList, setIngredeinList] = useState<Array<Ingredients>>([]);
+  const [recipeList, setRecipeList] = useState<Array<RecipesForm>>([]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Router>
+      <nav className="nav">
+        <Link to="/" className="nav-link brandname">
+          Recipe Book
+        </Link>
+        <NavLink to="/recipes" className="nav-link" activeClassName="active">
+          Recipes
+        </NavLink>
+        <NavLink
+          to="/shopping-list"
+          className="nav-link"
+          activeClassName="active"
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Shopping List
+        </NavLink>
+      </nav>
+      <Switch>
+        <Redirect exact from="/" to="/recipes" />
+        <Route path="/recipes">
+          <Recipes
+            ingredeinList={ingredeinList}
+            setIngredeinList={setIngredeinList}
+            recipeList={recipeList}
+            setRecipeList={setRecipeList}
+          />
+        </Route>
+        <Route path="/shopping-list">
+          <ShoppingList
+            ingredeinList={ingredeinList}
+            setIngredeinList={setIngredeinList}
+            recipeList={recipeList}
+            setRecipeList={setRecipeList}
+          />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
